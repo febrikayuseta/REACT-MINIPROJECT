@@ -1,0 +1,40 @@
+@reference "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Theme */
+:root {
+  --color-primary: #ee2b8c;
+}
+
+/* ⬇️ WAJIB pakai layer */
+@layer utilities {
+  .bg-primary {
+    background-color: var(--color-primary);
+  }
+
+  .text-primary {
+    color: var(--color-primary);
+  }
+}
+
+/* Button + floating add */
+.btn-add {
+  @apply absolute bottom-2 right-2 text-white
+         w-8 h-8 rounded-full flex items-center justify-center;
+}
+
+/* Product image */
+.product-img {
+  @apply rounded-xl w-full aspect-square object-cover;
+}
+
+/* Product text */
+.product-title {
+  @apply font-semibold mt-1;
+}
+
+.product-price {
+  @apply text-gray-600 text-sm;
+}
