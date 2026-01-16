@@ -1,21 +1,32 @@
+'use client';
+
+import React from 'react';
 import OrderItem from "./OrderItem";
-import { Product } from "@/app/order/page";
+import { useCart } from '../context/CartContext';
 
-type Props = {
-  products: Product[];
-  updateQuantity: (id: number, delta: number) => void;
-};
+export default function OrderList() {
+  const { items, updateQuantity, removeFromCart } = useCart();
 
-export default function OrderList({ products, updateQuantity }: Props) {
+  if (items.length === 0) {
+    return (
+      <section className="text-center py-8">
+        <p className="text-gray-600 text-lg">Keranjang Anda kosong. Silakan tambahkan produk!</p>
+      </section>
+    );
+  }
+
   return (
     <section className="space-y-4">
-      {products.map((item) => (
+      {items.map((item) => (
         <OrderItem
           key={item.id}
+          id={item.id}
+          image={item.image}
           name={item.name}
           price={item.price}
           quantity={item.quantity}
-          onChangeQty={(delta) => updateQuantity(item.id, delta)}
+          onChangeQty={(quantity) => updateQuantity(item.id, quantity)}
+          onRemove={() => removeFromCart(item.id)}
         />
       ))}
     </section>

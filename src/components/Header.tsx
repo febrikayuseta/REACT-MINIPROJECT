@@ -1,8 +1,16 @@
+'use client';
+
+import React from 'react';
+import Link from 'next/link';
+import { useAuth } from '../context/AuthContext';
+
 function Header() {
+  const { isLoggedIn, user } = useAuth();
+
   return (
     <section className="flex items-center justify-between p-4 bg-white shadow">
       <h1 className="text-xl font-bold text-pink-700">Welcome to Bebyelle</h1>
-      <div className="flex gap-3">
+      <div className="flex gap-3 items-center">
         {/* Search Icon */}
         <a href="/search" className="inline-block hover:text-pink-500">
           <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none">
@@ -18,10 +26,24 @@ function Header() {
               fill="#0F0F0F" />
           </svg>
         </a>
+        {/* Profile/Login */}
+        {isLoggedIn ? (
+          <Link href="/profile" className="flex items-center gap-2 px-3 py-1 bg-purple-600 text-white rounded-full hover:bg-purple-700 transition">
+            <img 
+              src={user?.avatar} 
+              alt={user?.first_name} 
+              className="w-6 h-6 rounded-full object-cover"
+            />
+            <span className="text-sm font-semibold">{user?.first_name}</span>
+          </Link>
+        ) : (
+          <Link href="/login" className="px-3 py-1 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition text-sm font-semibold">
+            Login
+          </Link>
+        )}
       </div>
     </section>
   );
 }
 
-
-export default Header 
+export default Header;

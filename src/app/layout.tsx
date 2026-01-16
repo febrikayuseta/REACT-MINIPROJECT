@@ -1,4 +1,8 @@
 import "./globals.css";
+import { AuthProvider } from "../context/AuthContext";
+import { CartProvider } from "../context/CartContext";
+import { ToastProvider } from "../context/ToastContext";
+import { ToastContainer } from "../components/ToastContainer";
 
 export const metadata = {
   title: "Bebyelle Coffee",
@@ -8,7 +12,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className="bg-gray-100 font-sans">
-        {children}
+        <ToastProvider>
+          <AuthProvider>
+            <CartProvider>
+              <ToastContainer />
+              {children}
+            </CartProvider>
+          </AuthProvider>
+        </ToastProvider>
       </body>
     </html>
   );

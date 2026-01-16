@@ -1,15 +1,19 @@
-type Props = {
-  subtotal?: number;
-};
+'use client';
 
-function OrderSummary({ subtotal = 0 }: Props) {
+import React from 'react';
+import { useCart } from '../context/CartContext';
+
+function OrderSummary() {
+  const { getTotalPrice, getTotalItems } = useCart();
+  
+  const subtotal = getTotalPrice();
   const tax = subtotal * 0.1;
   const total = subtotal + tax;
 
   return (
     <section className="bg-white p-4 rounded-lg shadow text-sm space-y-2">
       <div className="flex justify-between">
-        <span>Subtotal</span>
+        <span>Subtotal ({getTotalItems()} items)</span>
         <span>Rp {subtotal.toLocaleString("id-ID")}</span>
       </div>
       <div className="flex justify-between">
