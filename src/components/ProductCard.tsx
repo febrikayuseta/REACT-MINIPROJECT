@@ -17,7 +17,7 @@ function ProductCard({ id, image, name, price }: ProductProps) {
 
   const handleAdd = () => {
     addToCart(id, name, price, image);
-    addToast(`✓ ${name} telah ditambahkan ke keranjang`, 'success');
+    addToast(` ${name} telah ditambahkan ke keranjang`, 'success');
   };
 
   return (
@@ -30,7 +30,7 @@ function ProductCard({ id, image, name, price }: ProductProps) {
         />
         <button 
           onClick={handleAdd} 
-          className="btn-add bg-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:scale-110 transform"
+          className="btn-add bg-primary opacity-0 group-hover:opacity-100 transition-opacity "
         >
           +
         </button>

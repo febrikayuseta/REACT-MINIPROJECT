@@ -2,33 +2,57 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '../context/AuthContext';
 import Link from 'next/link';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('eve.holt@reqres.in');
   const [password, setPassword] = useState('cityslicka');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const [isSignup, setIsSignup] = useState(false);
-  const { login, signup, loading } = useAuth();
+
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
+  e.preventDefault();
+  setError('');
+  setLoading(true);
 
-    try {
-      if (isSignup) {
-        await signup(email, password);
-      } else {
-        await login(email, password);
-      }
-      router.push('/profile');
-    } catch (err: any) {
-      console.error('Auth error:', err);
-      setError(err.message || 'Gagal melakukan autentikasi. Coba lagi!');
+  try {
+    const endpoint = isSignup
+      ? 'https://reqres.in/api/register'
+      : 'https://reqres.in/api/login';
+
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+         "x-api-key": "reqres_78a869f591654962800d3a55978d5b34",
+      },
+      body: JSON.stringify({
+        email: email.trim(),
+        password: password.trim(),
+      }),
+      cache: 'no-store', // 🔑 FIX penting untuk Next.js
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data?.error || 'Authentication failed');
     }
-  };
+
+    // simpan token mock
+    localStorage.setItem('token', data.token);
+
+    router.push('/profile');
+  } catch (err: any) {
+    setError(err.message || 'Something went wrong');
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
@@ -45,25 +69,27 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-3">
           <div>
-            <label className="block text-gray-700 font-semibold mb-1">Email</label>
+            <label className="block text-gray-700 font-semibold mb-1">
+              Email
+            </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Masukkan email Anda"
-              className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm"
+              className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 text-sm"
               required
             />
           </div>
 
           <div>
-            <label className="block text-gray-700 font-semibold mb-1">Password</label>
+            <label className="block text-gray-700 font-semibold mb-1">
+              Password
+            </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Masukkan password"
-              className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm"
+              className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 text-sm"
               required
             />
           </div>
@@ -71,7 +97,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-pink-600 text-white font-bold py-1.5 rounded-lg hover:bg-pink-700 transition disabled:opacity-50 text-sm"
+            className="w-full bg-pink-600 text-white font-bold py-1.5 rounded-lg hover:bg-pink-700 disabled:opacity-50 text-sm"
           >
             {loading ? 'Loading...' : isSignup ? 'Sign Up' : 'Login'}
           </button>

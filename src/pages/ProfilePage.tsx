@@ -10,15 +10,44 @@ export default function ProfilePage() {
   const router = useRouter();
   const [hydrated, setHydrated] = useState(false);
 
+  const [users, setUsers] = useState(null);
+
+
   useEffect(() => {
     setHydrated(true);
   }, []);
 
+  const getUsers=() => {
+    fetch("https://reqres.in/api/users/2", {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+    "x-api-key": "reqres_78a869f591654962800d3a55978d5b34",
+  }
+})
+  .then(res => res.json())
+  .then(data => {
+    console.log(data);
+    setUsers(data);
+  })
+  .catch(err => {
+    console.error(err);
+  });
+  }
   useEffect(() => {
-    if (hydrated && !isLoggedIn && !loading) {
-      router.push('/login');
-    }
-  }, [isLoggedIn, loading, hydrated, router]);
+    getUsers();
+  }, []);
+
+
+  // useEffect(() => {
+  //   if (hydrated && !isLoggedIn && !loading) {
+  //     router.push('/login');
+  //   },[])
+  // useEffect(() => {
+  //   if (hydrated && !isLoggedIn && !loading) {
+  //     router.push('/login');
+  //   }
+  // }, [isLoggedIn, loading, hydrated, router]);
 
   const handleLogout = () => {
     logout();
@@ -33,7 +62,7 @@ export default function ProfilePage() {
     );
   }
 
-  if (!user) {
+  if (!users) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="text-xl text-gray-600">Redirecting...</div>
@@ -46,7 +75,7 @@ export default function ProfilePage() {
       {/* Header */}
       <div className="bg-white shadow">
         <div className="max-w-4xl mx-auto px-4 py-6 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-800">My Profile</h1>
+          <h1 className="text-2xl font-bold text-gray-800">My Profile {users?.data?.first_name} {users?.data?.last_name}</h1>
           <button
             onClick={handleLogout}
             className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
@@ -57,43 +86,18 @@ export default function ProfilePage() {
       </div>
 
       {/* Profile Content */}
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto px-6 py-8">
         {/* Profile Card */}
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          <div className="bg-gradient-to-r from-pink-500 to-pink-600 h-32"></div>
 
           <div className="px-6 pb-6">
-            {/* Avatar */}
-            <div className="flex flex-col items-center -mt-20 mb-4">
-              <img
-                src={user.avatar}
-                alt={`${user.first_name} ${user.last_name}`}
-                className="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover"
-              />
-            </div>
 
             {/* User Info */}
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-800">
-                {user.first_name} {user.last_name}
+            <div className="text-center mb-8 pt-6 bg-linear-to-r from-pink-500 to-pink-600 h-32">
+              <h2 className="text-3xl font-bold text-white">
+                {users?.data?.first_name} {users?.data?.last_name}
               </h2>
-              <p className="text-gray-600 mt-2">{user.email}</p>
-            </div>
-
-            {/* User Details Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="bg-pink-50 p-4 rounded-lg">
-                <p className="text-gray-600 text-sm font-semibold">User ID</p>
-                <p className="text-2xl font-bold text-pink-600 mt-2">{user.id}</p>
-              </div>
-              <div className="bg-pink-50 p-4 rounded-lg">
-                <p className="text-gray-600 text-sm font-semibold">First Name</p>
-                <p className="text-2xl font-bold text-pink-600 mt-2">{user.first_name}</p>
-              </div>
-              <div className="bg-pink-50 p-4 rounded-lg">
-                <p className="text-gray-600 text-sm font-semibold">Last Name</p>
-                <p className="text-2xl font-bold text-pink-600 mt-2">{user.last_name}</p>
-              </div>
+              <p className="text-white mt-2">{users?.data?.email}</p>
             </div>
 
             {/* Account Info */}
@@ -102,7 +106,7 @@ export default function ProfilePage() {
               <div className="space-y-3">
                 <div className="flex justify-between items-center py-2 border-b">
                   <span className="text-gray-600">Email:</span>
-                  <span className="font-semibold text-gray-800">{user.email}</span>
+                  <span className="font-semibold text-gray-800">{users?.data?.email}</span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b">
                   <span className="text-gray-600">Member Since:</span>

@@ -8,6 +8,7 @@ export interface User {
   first_name: string;
   last_name: string;
   avatar: string;
+  memberSince?: number;
 }
 
 export interface AuthContextType {
@@ -110,6 +111,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         first_name: email.split('@')[0].split('.')[0],
         last_name: email.split('@')[0].split('.')[1] || 'User',
         avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${email}`,
+        memberSince: new Date().getFullYear(),
       };
 
       const token = `token_${Math.random().toString(36).substr(2, 9)}`;

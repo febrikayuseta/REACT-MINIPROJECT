@@ -1,7 +1,7 @@
 function Banner() {
   return (
-    <section className="mt-4">
-      <div className="relative grid w-full h-40 sm:h-56 md:h-72 rounded-xl shadow-md overflow-hidden">
+    <section className="mt-4 mb-4">
+      <div className="relative w-full h-48 sm:h-56 md:h-72 rounded-xl shadow-md overflow-hidden">
         <img
           src="/images/banner.png"
           alt="Banner Bebyelle Coffee"
@@ -17,4 +17,5 @@ function Banner() {
     </section>
   );
 }
-export default Banner；
+
+export default Banner;
