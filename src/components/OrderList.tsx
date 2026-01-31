@@ -4,8 +4,23 @@ import React from 'react';
 import OrderItem from "./OrderItem";
 import { useCart } from '../context/CartContext';
 
-export default function OrderList() {
-  const { items, updateQuantity, removeFromCart } = useCart();
+interface OrderListProps {
+  products?: any[];
+  updateQuantity?: (id: any, delta: number) => void;
+}
+
+export default function OrderList({ products: propsProducts, updateQuantity: propsUpdateQuantity }: OrderListProps) {
+  const { items: contextItems, updateQuantity: contextUpdateQuantity, removeFromCart } = useCart();
+
+  const items = propsProducts || contextItems;
+
+  const handleUpdateQuantity = (id: any, newQuantity: number, currentQuantity: number) => {
+    if (propsUpdateQuantity) {
+      propsUpdateQuantity(id, newQuantity - currentQuantity);
+    } else {
+      contextUpdateQuantity(id, newQuantity);
+    }
+  };
 
   if (items.length === 0) {
     return (
@@ -20,13 +35,13 @@ export default function OrderList() {
       {items.map((item) => (
         <OrderItem
           key={item.id}
-          id={item.id}
-          image={item.image}
+          id={item.id.toString()}
+          image={item.image || "/placeholder-coffee.jpg"}
           name={item.name}
           price={item.price}
           quantity={item.quantity}
-          onChangeQty={(quantity) => updateQuantity(item.id, quantity)}
-          onRemove={() => removeFromCart(item.id)}
+          onChangeQty={(newQuantity) => handleUpdateQuantity(item.id, newQuantity, item.quantity)}
+          onRemove={() => propsUpdateQuantity ? propsUpdateQuantity(item.id, -item.quantity) : removeFromCart(item.id)}
         />
       ))}
     </section>

@@ -1,3 +1,5 @@
+"use server";
+
 import prisma from "@/lib/prisma";
 import type { Product } from "../types/product";
 import { revalidatePath } from "next/cache";
@@ -80,12 +82,4 @@ export async function hardDeleteProduct(id: string) {
 
   revalidatePath('/products');
   return product;
-}
-export interface Product {
-  id: string;
-  name: string;
-  description: string;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt: Date | null;
 }

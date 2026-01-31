@@ -3,10 +3,14 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
 
-function OrderSummary() {
+interface OrderSummaryProps {
+  subtotal?: number;
+}
+
+export default function OrderSummary({ subtotal: propsSubtotal }: OrderSummaryProps) {
   const { getTotalPrice, getTotalItems } = useCart();
-  
-  const subtotal = getTotalPrice();
+
+  const subtotal = propsSubtotal !== undefined ? propsSubtotal : getTotalPrice();
   const tax = subtotal * 0.1;
   const total = subtotal + tax;
 
@@ -27,5 +31,3 @@ function OrderSummary() {
     </section>
   );
 }
-
-export default OrderSummary;

@@ -8,7 +8,11 @@ export const metadata = {
   title: "Bebyelle Coffee",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body className="bg-gray-100 font-sans">

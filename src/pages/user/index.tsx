@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const RegisterPage = () => {
   const [registerData, setRegisterData] = useState<any>({
@@ -10,31 +12,31 @@ const RegisterPage = () => {
 
   const submitRegister = async () => {
     const payload = {
-        email: registerData.email,
-        password: registerData.password,
+      email: registerData.email,
+      password: registerData.password,
     };
-    const reponse = await fetch("https://reqres.in/api/users", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json", // register content type
-            "x-api-key" : "pro_f8e12047372c3bdf414fe83a2eda7c7ecf0f924a9d3cc156",
-        },
-        body: JSON.stringify(payload),
+    const response = await fetch("https://reqres.in/api/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", // register content type
+        "x-api-key": "pro_f8e12047372c3bdf414fe83a2eda7c7ecf0f924a9d3cc156",
+      },
+      body: JSON.stringify(payload),
     });
     const data = await response.json();
-    if(data.token){
-        setRegisterStatus("Berhasil register");
-        toast("Berhasil Register")
+    if (data.token) {
+      setRegisterStatus("Berhasil register");
+      toast("Berhasil Register")
     } else {
-        setRegisterStatus("Gagal register")
-        toast("Gagal Register")
+      setRegisterStatus("Gagal register")
+      toast("Gagal Register")
     }
     console.log("register", data);
   };
 
   return (
     <div className="container mx-auto">
-        <ToastContainer></ToastContainer>
+      <ToastContainer />
       <div className="flex gap-4">
         <div>
           <label
@@ -48,3 +50,5 @@ const RegisterPage = () => {
     </div>
   );
 };
+
+export default RegisterPage;
