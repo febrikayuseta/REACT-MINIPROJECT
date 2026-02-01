@@ -35,13 +35,25 @@ export default function OrderList({ products: propsProducts, updateQuantity: pro
       {items.map((item) => (
         <OrderItem
           key={item.id}
-          id={item.id.toString()}
-          image={item.image || "/placeholder-coffee.jpg"}
-          name={item.name}
-          price={item.price}
-          quantity={item.quantity}
-          onChangeQty={(newQuantity) => handleUpdateQuantity(item.id, newQuantity, item.quantity)}
-          onRemove={() => propsUpdateQuantity ? propsUpdateQuantity(item.id, -item.quantity) : removeFromCart(item.id)}
+          item={{
+            id: item.id.toString(),
+            image: item.image || "/placeholder-coffee.jpg",
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+          }}
+          actions={{
+            onPlus: () => handleUpdateQuantity(item.id, item.quantity + 1, item.quantity),
+            onMinus: () => {
+              const newQuantity = item.quantity - 1;
+              if (newQuantity <= 0) {
+                propsUpdateQuantity ? propsUpdateQuantity(item.id, -item.quantity) : removeFromCart(item.id);
+              } else {
+                handleUpdateQuantity(item.id, newQuantity, item.quantity);
+              }
+            },
+            onRemove: () => propsUpdateQuantity ? propsUpdateQuantity(item.id, -item.quantity) : removeFromCart(item.id),
+          }}
         />
       ))}
     </section>
